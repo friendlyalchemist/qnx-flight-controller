@@ -109,6 +109,4 @@ CSV columns: `t_us,task,prio,job,event,value`: `WAKE` value = wake-up latency (u
 3. Pipeline version: IMU, control and telemetry threads over message queues
 4. Deadline-miss counting, watchdog, rate-monotonic prediction vs measurement
 
-## License
 
-Choose a license before publishing (MIT is common). Do not commit QNX SDK files or binaries.
