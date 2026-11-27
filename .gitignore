@@ -1,0 +1,20 @@
+# build output
+priority_demo
+priority_demo_host
+*.o
+*.map
+
+# measured logs stay local unless you copy one into examples/ on purpose
+logs/*
+!logs/.gitkeep
+
+# python
+__pycache__/
+*.pyc
+.venv/
+
+# QNX / Momentics workspace noise (never commit SDK files or binaries)
+.metadata/
+.settings/
+.qnx/
+*.bsp
