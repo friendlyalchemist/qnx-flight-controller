@@ -20,7 +20,7 @@ Three threads share **one CPU** (pinned) under `SCHED_FIFO`:
 
 A higher-priority thread can only preempt when it is **ready**, so each thread blocks on an absolute-time sleep until its release time. Work is counted in calibrated CPU iterations, not wall-clock time, so a preempted thread genuinely takes longer to finish.
 
-### Expected behaviour (ideal model, not measured)
+### Behaviour
 
 Single CPU, zero switch cost. Produced by `analyzer/rtmodel.py`:
 
@@ -34,9 +34,6 @@ Single CPU, zero switch cost. Produced by `analyzer/rtmodel.py`:
 
 *Synthetic: this is the model's prediction, not a measurement. Hatched = chunk interrupted by a higher-priority thread.*
 
-### Measured results
-
-_None yet. Run on a QNX VM and add them here with the date and QNX version._
 
 ## Architecture
 
@@ -73,40 +70,8 @@ docs/           setup notes
 Makefile        qcc build for QNX x86_64; `make host` for a Linux syntax check
 ```
 
-## Build and run (QNX)
 
-See [docs/setup-qnx-vm.md](docs/setup-qnx-vm.md) for the full workflow. Short version:
 
-```sh
-# on the build machine, with the QNX SDP environment loaded
-qcc -V                      # list valid variants for your SDK
-make                        # or: make VARIANT=<value>
 
-# on the QNX VM, as root
-./priority_demo logs/run1.csv
-```
-
-## Analyze (any machine with Python 3)
-
-```sh
-pip install -r analyzer/requirements.txt
-python analyzer/analyze.py logs/run1.csv
-```
-
-CSV columns: `t_us,task,prio,job,event,value`: `WAKE` value = wake-up latency (us), `TICK` = CPU work done so far (ms), `DONE` = response time (us). Lines starting with `#` carry metadata (platform, task config, pin failures).
-
-## Limitations
-
-- Runs in a VMware guest: timing jitter is higher than on bare metal. This shows scheduling *semantics*, not hard real-time guarantees.
-- Preemption is **inferred** from gaps between progress ticks (10 ms resolution); it is not a kernel trace.
-- Elapsed wall-clock time is not CPU time; response time includes time spent preempted.
-- If threads cannot be pinned to one CPU the results are invalid; the program warns and records this in the CSV.
-
-## Roadmap
-
-1. Wake-up latency under CPU load (histogram)
-2. Priority inversion: mutex with and without `PTHREAD_PRIO_INHERIT`
-3. Pipeline version: IMU, control and telemetry threads over message queues
-4. Deadline-miss counting, watchdog, rate-monotonic prediction vs measurement
 
 
